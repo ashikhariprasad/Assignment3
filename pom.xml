@@ -39,6 +39,11 @@
 			<artifactId>jetcd</artifactId>
 			<version>0.3.1</version>
 		</dependency>
+		<dependency>
+			<groupId>com.github.mlaccetti</groupId>
+			<artifactId>etcd-client</artifactId>
+			<version>0.1.1</version>
+		</dependency>
 		
 
 	</dependencies>
