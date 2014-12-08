@@ -6,13 +6,15 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.net.URI;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
-import jetcd.EtcdClient;
-import jetcd.EtcdClientFactory;
-import jetcd.EtcdException;
+import com.justinsb.etcd.EtcdClient;
+import com.justinsb.etcd.EtcdClientException;
+import com.justinsb.etcd.EtcdResult;
+
 
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -42,12 +44,36 @@ public class BaseController {
 		return new UserObj(usr.getEmail(),usr.getPassword(),"u-"+usr.getUser_id(),usr.getCreated_at());
 	}
 	
-	@RequestMapping(value = "/api/v1"  , method = RequestMethod.GET)
+	@RequestMapping(value = "/"  , method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.CREATED)
 	@ResponseBody
 	public String updateCounter(){
-		String sCounter = null;
-		EtcdClient client = EtcdClientFactory.newInstance();
+		EtcdResult sCounter = null;
+		URI uri= URI.create("http://54.67.61.215:4001");
+		EtcdClient client = new EtcdClient(uri);
+		try {
+			sCounter = client.get("counter");
+		} catch (EtcdClientException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		if(sCounter == null){
+			try {
+				client.set("counter","0");
+			} catch (EtcdClientException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		int iCounter = Integer.parseInt(sCounter.value);
+		iCounter++;
+		try {
+			 client.set("counter", Integer.toString(iCounter));
+		} catch (EtcdClientException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	/*	EtcdClient client = EtcdClientFactory.newInstance();
 		try {
 			sCounter = client.get("counter");
 		} catch (EtcdException e1) {
@@ -70,6 +96,7 @@ public class BaseController {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		*/
 		return Integer.toString(iCounter);
 	}
 
