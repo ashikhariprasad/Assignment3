@@ -44,12 +44,12 @@ public class BaseController {
 		return new UserObj(usr.getEmail(),usr.getPassword(),"u-"+usr.getUser_id(),usr.getCreated_at());
 	}
 	
-	@RequestMapping(value = "/"  , method = RequestMethod.GET)
+	@RequestMapping(value = "/api/v1/counter"  , method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.CREATED)
 	@ResponseBody
 	public String updateCounter(){
 		EtcdResult sCounter = null;
-		URI uri= URI.create("http://54.67.61.215:4001");
+		URI uri= URI.create("http://54.67.23.25:4001");
 		EtcdClient client = new EtcdClient(uri);
 		try {
 			sCounter = client.get("counter");
